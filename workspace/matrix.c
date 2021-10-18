@@ -18,7 +18,7 @@ Matrix readMatrix(){
 	scanf("%i %i \n", &nombreLignes, &nombreColonnes);
     matrice.nbLignes = nombreLignes;
     matrice.nbColonnes = nombreColonnes;
-    //matrice.matrice = malloc(nombreLignes * nombreColonnes * sizeof(int));
+    matrice.matrice = malloc(nombreLignes * nombreColonnes * sizeof(int)); //!!Pas de possibilité de free l'espace alloué!!
     for(int ligne = 0; ligne < nombreLignes -1 ; ligne++){
         for(int colonne = 0; colonne < nombreColonnes -1 ; colonne++){
             scanf("%i" , matrice.matrice[ligne*nombreColonnes + colonne]);
@@ -32,36 +32,37 @@ Matrix readMatrix(){
 	return matrice;
 }
 
-// Matrix* readMatrixArray(){
-//     int nbMatrice;
-//     scanf("%i\n",&nbMatrice);
-// 	Matrix *MatrixArray;
-//     MatrixArray = calloc(nbMatrice, sizeof(Matrix));
-//     for(int numMatrice=0; numMatrice < nbMatrice; numMatrice++){
-//         MatrixArray[numMatrice] = readMatrix();
-// 	}
-//     return MatrixArray;
-// }
 
-// void printMatrix(Matrix* matrice){
-// 	for(int ligne=0; ligne< matrice->nbLignes; ligne++){
-//         for(int colonne=0; colonne< matrice->nbColonnes; colonne++){
-// 		    printf("%d \n", matrice->matrice[ligne*(matrice->nbColonnes-1) + colonne]);
-//         }
-// 	}
-// }
 
-// void printMatrixArray(Matrix* matriceArray){
-//     for(int numMatrice=0; numMatrice < matriceArray->nbMatrice; numMatrice++){
-//         printMatrix(matriceArray[numMatrice]);
-// 	}
-// }
+Matrix* readMatrixArray(){
+    int nbMatrice;
+    scanf("%i\n",&nbMatrice);
+	Matrix *MatrixArray;
+    MatrixArray = calloc(nbMatrice, sizeof(Matrix));
+    for(int numMatrice=0; numMatrice < nbMatrice; numMatrice++){
+        MatrixArray[numMatrice] = readMatrix();
+	}
+    return MatrixArray;
+}
+
+void printMatrix(Matrix* matrice){
+	for(int ligne=0; ligne< matrice->nbLignes; ligne++){
+        for(int colonne=0; colonne< matrice->nbColonnes; colonne++){
+		    printf("%d \n", matrice->matrice[ligne*(matrice->nbColonnes-1) + colonne]);
+        }
+	}
+}
+
+void printMatrixArray(Matrix* matriceArray){
+    for(int numMatrice=0; numMatrice < matriceArray->nbMatrice; numMatrice++){
+        printMatrix(matriceArray[numMatrice]);
+	}
+}
 
 int main(void)
 {
-    readMatrix();
-    // Matrix *matriceArray = readMatrixArray();
-	// printMatrixArray(matriceArray);
-    // free(matriceArray);
+    Matrix *matriceArray = readMatrixArray();
+	printMatrixArray(matriceArray);
+    free(matriceArray);
 	return EXIT_SUCCESS;
 }
