@@ -1,6 +1,7 @@
-#include "liste-chainee.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
+#include "linkedListOfMusic.h"
 
 #define TODO NULL;
 
@@ -25,19 +26,17 @@ Liste ajoutTete(Element v, Liste l) {
 }
 
 
-void afficheElement(Element e) {
-	printf("%i ",e);
-}
-
 // affiche tous les éléments de la liste l
 // Attention, cette fonction doit être indépendante du type des éléments de la liste
 // utiliser une fonction annexe affiche_element
 // Attention la liste peut être vide !
 // version itérative
 void afficheListe_i(Liste l) {
-	while(! estVide(l)){
-		afficheElement(l->val);
-		l = l->suiv;
+	Liste p = l;
+
+	while(!estVide(p)) {
+		afficheElement(p->val);
+		p=p->suiv;
 	}
 	printf("\n");
 }
@@ -49,9 +48,6 @@ void afficheListe_r(Liste l) {
 		afficheListe_r(l->suiv);
 	else
 		printf("\n");
-}
-
-void detruireElement(Element e) {
 }
 
 // Détruit tous les éléments de la liste l
@@ -96,11 +92,6 @@ Liste ajoutFin_r(Element v, Liste l) {
 	return l;
 }
 
-// compare deux elements
-bool equalsElement(Element e1, Element e2){
-	return e1 == e2;
-}
-
 // Retourne un pointeur sur l'élément de la liste l contenant la valeur v ou NULL
 // version itérative
 Liste cherche_i(Element v,Liste l) {
@@ -124,7 +115,7 @@ Liste cherche_r(Element v,Liste l) {
 // version itérative
 Liste retirePremier_i(Element v, Liste l) {
 	Liste precedent, temp;
-	if (estVide(temp))
+	if (estVide(l))
 		return l;
 	if(equalsElement(l->val,v)){
 		temp = l->suiv;
@@ -165,6 +156,62 @@ Liste retirePremier_r(Element v, Liste l) {
 // void afficheEnvers_r(Liste l) {
 // 	TODO;
 // }
+
+// // version recursive
+// Liste trierParAnnee(Liste l) {
+// 	if (estVide(l))
+// 		return l;
+// 	if(equalsElement(l->val,v)){
+// 		Liste temp = l->suiv;
+// 		l->suiv = NULL;
+// 		detruire_r(l);
+// 		return temp;
+// 	}
+// 	l->suiv = retirePremier_r(v,l->suiv);
+// 	return l;
+// }
+
+
+/* This function scans a line of text (until \n) and returns an element that contains the music of the line (255 max char) excluding \n.
+It also ensures the \0 and , terminations.
+**WARNING**: The result of this function has been allocated (calloc) by the function */
+Element scanLine(FILE* fichier)
+{
+	Music* musique = (Music *) malloc(sizeof(Music));
+	int maxLineSize = 255;
+	char* ligne = calloc(maxLineSize+1,sizeof(char));
+	if ( (ligne = fgets(ligne,maxLineSize,fichier)) != NULL){
+		ligne = strdup(ligne);
+		musique->name = strsep(&ligne, ",");
+		musique->artist = strsep(&ligne, ",");
+		musique->album = strsep(&ligne, ",");
+		musique->genre = strsep(&ligne, ",");
+		musique->discNumber = atoi(strsep(&ligne, ","));
+		musique->trackNumber = atoi(strsep(&ligne, ","));
+		musique->year = atoi(ligne);
+		return musique;
+	}
+	return NULL;
+	
+}
+
+// Renvoie une liste de musiques construite à partir du fichier CSV des musiques
+MusicList lireCSV() {
+	FILE* fileCSV = fopen("music.csv", "r");
+	printf("Ouverture du fichier\n");
+	Element temp = scanLine(fileCSV);
+	MusicList mesMusiques = (Cellule *) malloc(sizeof(Cellule));
+	mesMusiques->suiv = NULL;
+	mesMusiques->val = (Music *) malloc(sizeof(Music));
+	if (fileCSV != NULL)
+    {
+		while ( (temp = scanLine(fileCSV)) != NULL) {
+			ajoutFin_r(temp, mesMusiques);
+		}
+        fclose(fileCSV);
+    }
+	return mesMusiques;
+}
 
 
 
