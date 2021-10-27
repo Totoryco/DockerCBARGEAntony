@@ -1,4 +1,5 @@
 // gcc -W -Wall linkedListOfMusic.c mySpitofy.c -o mySpitofy
+// valgrind --leak-check=yes --leak-check=full --show-leak-kinds=all --show-reachable=no ./mySpitofy
 
 #include "linkedListOfMusic.h"
 #include <stdlib.h>
@@ -26,6 +27,7 @@ void afficheElement(Element e){
 }
 
 void detruireElement(Element e){
+	free(e);
 }
 
 bool equalsElement(Element e1, Element e2){
@@ -71,9 +73,13 @@ int main(void){
 
 	Liste maListeDeMusiques = lireCSV();
 	afficheListe_i(maListeDeMusiques);
-	// trierParAnnee(maListeDeMusiques);
-	// afficheListe_r(maListeDeMusiques);
+	trierParAnnee(maListeDeMusiques); // non fonctionnel
+	afficheListe_r(maListeDeMusiques);
 
-	// detruire_r(maListeDeMusiques);
+	detruire_r(maListeDeMusiques); 
+// on constate une fuite par ligne lue avec valgrind 
+// mais je ne trouve pas son origine (provient probablement de mon scanLine)
+// je suppose que strdup ne free pas par défaut, mais vu que je modifie "ligne"
+// je ne peux plus le free correctement
 	return EXIT_SUCCESS;
 }

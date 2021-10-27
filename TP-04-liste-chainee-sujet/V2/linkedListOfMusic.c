@@ -157,20 +157,6 @@ Liste retirePremier_r(Element v, Liste l) {
 // 	TODO;
 // }
 
-// // version recursive
-// Liste trierParAnnee(Liste l) {
-// 	if (estVide(l))
-// 		return l;
-// 	if(equalsElement(l->val,v)){
-// 		Liste temp = l->suiv;
-// 		l->suiv = NULL;
-// 		detruire_r(l);
-// 		return temp;
-// 	}
-// 	l->suiv = retirePremier_r(v,l->suiv);
-// 	return l;
-// }
-
 
 /* This function scans a line of text (until \n) and returns an element that contains the music of the line (255 max char) excluding \n.
 It also ensures the \0 and , terminations.
@@ -179,9 +165,9 @@ Element scanLine(FILE* fichier)
 {
 	Music* musique = (Music *) malloc(sizeof(Music));
 	int maxLineSize = 255;
-	char* ligne = calloc(maxLineSize+1,sizeof(char));
-	if ( (ligne = fgets(ligne,maxLineSize,fichier)) != NULL){
-		ligne = strdup(ligne);
+	char* first = calloc(maxLineSize+1,sizeof(char));
+	if ( (first = fgets(first,maxLineSize,fichier)) != NULL){
+		char* ligne = strdup(first);
 		musique->name = strsep(&ligne, ",");
 		musique->artist = strsep(&ligne, ",");
 		musique->album = strsep(&ligne, ",");
@@ -189,8 +175,10 @@ Element scanLine(FILE* fichier)
 		musique->discNumber = atoi(strsep(&ligne, ","));
 		musique->trackNumber = atoi(strsep(&ligne, ","));
 		musique->year = atoi(ligne);
+		free(first);
 		return musique;
 	}
+	free(first);
 	return NULL;
 	
 }
@@ -211,6 +199,32 @@ MusicList lireCSV() {
         fclose(fileCSV);
     }
 	return mesMusiques;
+}
+
+bool estPlusRecent(Element e1, Element e2){
+	Music *m1 = (Music *) e1;
+	Music *m2 = (Music *) e2;
+	return (m1->year < m2->year);
+}
+
+void echangeValeur(Element a,Element b){
+    Element c = a;
+    a = b;
+    b = c;
+};
+
+// Change la liste en la triant par ordre d'année croissant
+void trierParAnnee(MusicList l){
+	if (!estVide(l)){
+		Liste temp;
+		temp = l->suiv;
+		if(!estVide(temp)){
+			if(!estPlusRecent(l->val,temp->val)){
+				echangeValeur(l->val,temp->val);
+			}
+			trierParAnnee(l->suiv);
+		}
+	}
 }
 
 

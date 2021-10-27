@@ -84,7 +84,7 @@ Liste retirePremier_r(Element v, Liste l);
 void afficheEnvers_r(Liste l);
 
 // Retourne la liste modifiée dans laquelle les éléments (musiques) ont été triées dans l'ordre croissant des années
-Liste trierParAnnee(Liste l);
+void trierParAnnee(Liste l);
 
 
 // Retourne une liste de musique remplie à partir du fichier CSV en entrée
