@@ -72,9 +72,9 @@ int* readWinners(){
 
 void printWinners(Winner *tab){
 	for(int i=0; i<50; i++){
-		printf("%d \n",tab[i].year);
-		printf("%s \n",tab[i].name);
-		printf("%s \n",tab[i].description);
+		printf("%d \n", tab[i].year);
+		printf("%s \n", tab[i].name);
+		printf("%s \n", tab[i].description);
 	}
 }
 
@@ -90,7 +90,7 @@ void infosAnnee(int year){
 
 		if(tab[i].year == year){
 			printf("L'annee %d, le(s) gagnant(s) ont été : %s \n", year, tab[i].name);
-			printf("Nature des travaux : %s \n",tab[i].description);
+			printf("Nature des travaux : %s \n", tab[i].description);
 		}
 	}
 }
@@ -98,9 +98,10 @@ void infosAnnee(int year){
 
 int main(void)
 {
-	//Winner *tab = readWinners();
-	//printWinners(tab);
-	infosAnnee(2003);
+	Winner *tab = readWinners();
+	printWinners(tab);
+	//infosAnnee(2003);
+	//free(tab);
 
 	return EXIT_SUCCESS;
 }

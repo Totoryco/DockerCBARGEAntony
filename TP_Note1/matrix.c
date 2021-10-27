@@ -66,3 +66,4 @@ int main(void)
     free(matriceArray);
 	return EXIT_SUCCESS;
 }
+nice
