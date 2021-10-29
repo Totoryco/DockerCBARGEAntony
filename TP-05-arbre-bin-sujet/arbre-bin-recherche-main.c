@@ -1,4 +1,4 @@
-// gcc -W -Wall -Wextra -std=c99 arbre-bin-recherche.c arbre-bin-recherche-main.c
+// gcc -W -Wall -Wextra -std=c99 arbre-bin-recherche-sujet.c arbre-bin-recherche-main.c
 
 // gcc -W -Wall -Wextra -std=c99 arbre-bin-recherche-correction.c arbre-bin-recherche-main.c
 
@@ -43,13 +43,13 @@ int main(void){
 // 	afficheGRD_r(a);printf("\n");
 // 	printf("nombreDeNoeud(a)= %i\n",nombreDeNoeud(a));
 //
-	// printf("profondeur 5 = %i\n",profondeur(a,5));
-	// printf("profondeur 2 = %i\n",profondeur(a,2));
-	// printf("profondeur 3 = %i\n",profondeur(a,3));
-	// printf("profondeur 7 = %i\n",profondeur(a,7));
-	// printf("profondeur NULL = %i\n",profondeur(NULL,5));
-	// printf("profondeur 18 = %i\n",profondeur(a,18));
-	//
+	printf("profondeur 5 = %i\n",profondeur(a,5));
+	printf("profondeur 2 = %i\n",profondeur(a,2));
+	printf("profondeur 3 = %i\n",profondeur(a,3));
+	printf("profondeur 7 = %i\n",profondeur(a,7));
+	printf("profondeur NULL = %i\n",profondeur(NULL,5));
+	printf("profondeur 18 = %i\n",profondeur(a,18));
+	
 	//
 	// p=pere(NULL,5);
 	// printf("pere(NULL,5) = %i\n",p==NULL?-1:p->val);
