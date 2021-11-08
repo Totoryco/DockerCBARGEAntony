@@ -35,9 +35,8 @@ ArbreBinaire insere_i(ArbreBinaire a, Element e) {
 	while (!estVide(arbreTempo)){
 		if(arbreTempo->val == e)
 			return a;
-
 		arbrePrecedent = arbreTempo;
-		if (e < a->val){
+		if (e < arbreTempo->val){
 			arbreTempo = arbreTempo->filsGauche;
 			estAGauche = true;
 		}
@@ -76,47 +75,73 @@ ArbreBinaire insere_r(ArbreBinaire a, Element e) {
 int nombreDeNoeud(ArbreBinaire a){
 	if(estVide(a))
 		return 0;
-	if(!estVide(a->filsDroit))
-		return (nombreDeNoeud(a->filsDroit)+1);
-	if(!estVide(a->filsGauche))
-		return (nombreDeNoeud(a->filsGauche)+1);
-	return 1;
+	return 1 + nombreDeNoeud(a->filsGauche) + nombreDeNoeud(a->filsDroit);
 }
 
-
 // retourne la profondeur du noeud ayant la valeur e dans a
-// retourne -1 si a est vide ou si e n'est pas dans a
+// retourne -1 si a est vide ou si e n'est pas dans a 
 int profondeur(ArbreBinaire a, Element e){
-	int prof = -1;
-	if(estVide(a))
-		return prof;
-	if(e != a->val)
-		prof = profondeur(a->filsGauche, e)+1;
-		prof--;
-	    prof = profondeur(a->filsDroit, e)+1;
-	return 0;
+	ArbreBinaire arbreTempo;
+	int prof;
+	if (!estVide(a)){
+		arbreTempo = a;
+		prof = 1;
+		while (!(estVide(arbreTempo))){
+			if(arbreTempo->val == e)
+				return prof;
+
+			if (e < arbreTempo->val){
+				if(!estVide(arbreTempo->filsGauche)){
+					prof++;
+					arbreTempo = arbreTempo->filsGauche;
+				}
+				else
+					return -1;
+			}
+			else{
+				if(!estVide(arbreTempo->filsDroit)){
+					prof++;
+					arbreTempo = arbreTempo->filsDroit;
+				}
+				else
+					return -1;
+			}
+		}
+	}
+	return -1;
+}
+
+int maxOf(int a, int b){
+	if (a>b)
+		return a;
+	return b;
 }
 
 // retourne la hauteur de l'arbre a
 int hauteur(ArbreBinaire a){
 	if(estVide(a))
 		return 0;
-	return 0;
+	return 1 + maxOf(nombreDeNoeud(a->filsGauche),nombreDeNoeud(a->filsDroit));
 }
 
-// retourne le pere de elem dans l'arbre a ou NULL s'il n'existe pas
-ArbreBinaire pere(ArbreBinaire a, Element elem){
+// retourne le pere de e dans l'arbre a ou NULL s'il n'existe pas
+ArbreBinaire pere(ArbreBinaire a, Element e){
 	ArbreBinaire arbreTempo, arbrePrecedent;
-	if (estVide(a)){
-		return NULL;
-	}
-	arbreTempo = a;
-	while (!estVide(arbreTempo)){
-		if(arbreTempo->val == e)
-			return arbrePrecedent;
+	if (!estVide(a)){
+		arbreTempo = a;
+		arbrePrecedent = NULL;
+		while (!estVide(arbreTempo)){
+			if(arbreTempo->val == e)
+				return arbrePrecedent;
 
-		arbrePrecedent = arbreTempo;
-		pere(arbreTempo->)
+			arbrePrecedent = arbreTempo;
+			if (e < arbreTempo->val){
+				arbreTempo = arbreTempo->filsGauche;
+			}
+			else{
+				arbreTempo = arbreTempo->filsDroit;
+			}
+		}
 	}
 	return NULL;
 }
@@ -155,32 +180,80 @@ void afficheGDR_r(ArbreBinaire a){
 // retourne le noeud dont la valeur est minimum dans l'arbre
 // Suppose que a est un arbre binaire de recherche sans doublons
 ArbreBinaire min(ArbreBinaire a){
-	return NULL;
+	ArbreBinaire arbreTempo;
+	if(estVide(a))
+		return NULL;
+	arbreTempo = a;
+	while(!estVide(arbreTempo->filsGauche)){
+		arbreTempo = arbreTempo->filsGauche;
+	}
+	return arbreTempo;
 }
 
 // retourne le noeud dont la valeur est maximum dans l'arbre
 // Suppose que a est un arbre binaire de recherche sans doublons
 ArbreBinaire max(ArbreBinaire a){
-	return NULL;
+	ArbreBinaire arbreTempo;
+	if(estVide(a))
+		return NULL;
+	arbreTempo = a;
+	while(!estVide(arbreTempo->filsDroit)){
+		arbreTempo = arbreTempo->filsDroit;
+	}
+	return arbreTempo;
 }
 
 
-// retourne l'arbre dont la valeur de la racine est elem et NULL si elem n'existe dans a 
+// retourne l'arbre dont la valeur de la racine est e et NULL si e n'est pas dans a 
 // version récursive
-ArbreBinaire recherche_r(ArbreBinaire a, Element elem){
-
-	return NULL;
+ArbreBinaire recherche_r(ArbreBinaire a, Element e){
+	if (estVide(a))
+		return NULL;
+	if(a->val == e)
+		return a;
+	else {
+		if (e < a->val){
+			return recherche_r(a->filsGauche, e);
+		}
+		else{
+			return recherche_r(a->filsDroit, e);
+		}
+	}
 }
 
 
-// suppime x de a
-ArbreBinaire supprimer_r(ArbreBinaire a,Element x)
-{
-
-	return NULL;
+// supprime x de a
+ArbreBinaire supprimer_r(ArbreBinaire a,Element x){
+	if(estVide(a))
+		return NULL;
+	if(a->val == x){
+		if (!estVide(a->filsDroit)){
+			a->filsDroit->filsGauche = a->filsGauche;
+			a = a->filsDroit;
+			return a;
+		}
+		else{
+			a = a->filsGauche;
+			return a;
+		}
+	}
+	else {
+		if (x < a->val){
+			a->filsGauche = supprimer_r(a->filsGauche, x);
+		}
+		else{
+			a->filsDroit = supprimer_r(a->filsDroit, x);
+		}
+	}
+	return a;
 }
 
 void detruire_r(ArbreBinaire a){
-
+	if(!estVide(a)){
+		detruire_r(a->filsGauche);
+		detruire_r(a->filsDroit);
+		a = supprimer_r(a, a->val);
+		free(a);
+	}
 }
 
